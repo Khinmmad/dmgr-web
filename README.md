@@ -2,6 +2,8 @@
 
 Promotional landing page for **dmgr** — a modern device manager for Linux, Windows & macOS.
 
+**🌐 Live:** https://khinmmad.github.io/dmgr-web/
+
 - **Frontend:** [Astro](https://astro.build) + [Tailwind CSS v4](https://tailwindcss.com) — static, bilingual (EN/ES), Catppuccin dark theme, scroll animations.
 - **Backend:** Go microservice that serves download links from the GitHub Releases API (cached) and counts download clicks per platform.
 
@@ -66,9 +68,25 @@ Environment variables:
 Counters persist to `counts.json`. CORS is open (`*`) so the static site can call it
 from anywhere.
 
-## Deploy notes
+## Deploy
 
-- **Frontend:** any static host. Set `PUBLIC_API_BASE` to your deployed backend URL
-  (or leave empty for static-only).
-- **Backend:** any host that runs a Go binary (Fly.io, Railway, a small VPS, a
-  container). Mount a volume for `counts.json` if you want counts to survive restarts.
+The frontend is live on **GitHub Pages** at https://khinmmad.github.io/dmgr-web/
+(served from the `gh-pages` branch). To rebuild and publish:
+
+```powershell
+pwsh ./deploy.ps1
+```
+
+It builds with `PUBLIC_BASE=/dmgr-web/` (the Pages subpath) and no backend, then
+force-pushes `frontend/dist/` to `gh-pages`. GitHub Pages serves it within ~1 min.
+
+### Notes
+
+- **Frontend:** any static host works. For Pages the subpath base is required; for a
+  root domain (Netlify / Vercel / Cloudflare Pages) leave `PUBLIC_BASE` unset.
+  Set `PUBLIC_API_BASE` to your deployed backend URL to enable live release data +
+  download counters (otherwise the bundled fallback links are used).
+- **Backend:** the Go service needs a host that runs a binary (Fly.io, Railway, a
+  small VPS, a container) — GitHub Pages can't run it. Mount a volume for
+  `counts.json` to persist counts. Once hosted, set `PUBLIC_API_BASE` and redeploy
+  the frontend.
