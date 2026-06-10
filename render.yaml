@@ -1,19 +1,23 @@
-# Render.com blueprint for the Go backend.
-# Deploy: push to GitHub, then New > Blueprint and pick this repo.
+# Render.com blueprint for the Go backend (free plan, no credit card).
+# Deploy: render.com -> New -> Blueprint -> pick this repo (Khinmmad/dmgr-web).
+#
+# Note: the free plan has no persistent disk, so the download counters reset on
+# each deploy/restart, and the service sleeps after ~15 min idle (cold start).
+# For persistent counters, switch `plan: free` to `plan: starter` and add a disk
+# (see the commented block below).
 services:
   - type: web
     name: dmgr-web-backend
     runtime: docker
     rootDir: backend
     dockerfilePath: ./Dockerfile
+    plan: free
+    region: oregon
     healthCheckPath: /healthz
-    envVars:
-      - key: PORT
-        value: "8080"
-      - key: DATA_DIR
-        value: /data
-    # Persistent disk keeps counts.json across deploys (paid plans).
-    disk:
-      name: data
-      mountPath: /data
-      sizeGB: 1
+    autoDeploy: true
+    # For persistent counts (paid plan), uncomment:
+    # plan: starter
+    # disk:
+    #   name: data
+    #   mountPath: /data
+    #   sizeGB: 1
