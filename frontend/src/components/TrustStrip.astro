@@ -1,0 +1,32 @@
+---
+import T from "./T.astro";
+
+const items = [
+  {
+    icon: `<path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/>`,
+    en: "MIT licensed", es: "Licencia MIT",
+  },
+  {
+    icon: `<path d="M12 2l8 3v6c0 5-3.5 8.5-8 11-4.5-2.5-8-6-8-11V5z" fill="none"/><path d="M9 12l2 2 4-4"/>`,
+    en: "No telemetry", es: "Sin telemetría",
+  },
+  {
+    icon: `<path d="M13 2L4.5 12.5a1 1 0 00.8 1.6H11l-1 7.9 8.5-10.5a1 1 0 00-.8-1.6H12z"/>`,
+    en: "Tiny & fast", es: "Ligero y rápido",
+  },
+  {
+    icon: `<rect x="2" y="4" width="20" height="14" rx="2" fill="none"/><path d="M8 21h8M12 18v3"/>`,
+    en: "4 platforms", es: "4 plataformas",
+  },
+];
+---
+<div class="reveal mx-auto max-w-4xl px-5 sm:px-8 -mt-4 mb-4">
+  <div class="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 rounded-2xl border border-surface0/70 bg-mantle/40 py-4 px-6">
+    {items.map((it) => (
+      <div class="flex items-center gap-2 text-sm text-subtext">
+        <svg class="w-[18px] h-[18px] text-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={it.icon} />
+        <span class="font-medium"><T en={it.en} es={it.es} /></span>
+      </div>
+    ))}
+  </div>
+</div>

@@ -1,0 +1,74 @@
+---
+import T from "./T.astro";
+
+const faqs = [
+  {
+    q: { en: "Is dmgr really free?", es: "¿dmgr es realmente gratis?" },
+    a: {
+      en: "Yes — completely free and open source under the MIT License. No paid tiers, no accounts, no ads.",
+      es: "Sí — completamente gratis y de código abierto bajo la Licencia MIT. Sin planes de pago, sin cuentas, sin anuncios.",
+    },
+  },
+  {
+    q: { en: "Which platforms are supported?", es: "¿Qué plataformas son compatibles?" },
+    a: {
+      en: "Linux is fully supported (the .deb, .rpm, AppImage and AUR builds). Windows runs with a native backend; the installer is on the way. macOS support is in progress.",
+      es: "Linux está totalmente soportado (.deb, .rpm, AppImage y AUR). Windows funciona con un backend nativo; el instalador está en camino. El soporte de macOS está en progreso.",
+    },
+  },
+  {
+    q: { en: "Does it need root / administrator?", es: "¿Necesita root / administrador?" },
+    a: {
+      en: "Only for privileged actions like enabling/disabling a device or editing properties. Browsing devices, audio and Bluetooth work without elevation; dmgr asks via polkit (Linux) or UAC (Windows) only when needed.",
+      es: "Solo para acciones privilegiadas como activar/desactivar un dispositivo o editar propiedades. Explorar dispositivos, audio y Bluetooth funcionan sin elevación; dmgr la pide vía polkit (Linux) o UAC (Windows) solo cuando hace falta.",
+    },
+  },
+  {
+    q: { en: "Is my data private?", es: "¿Mis datos son privados?" },
+    a: {
+      en: "Always. dmgr runs entirely on your machine with no telemetry and no network calls about your hardware. Nothing leaves your computer.",
+      es: "Siempre. dmgr corre por completo en tu equipo sin telemetría ni llamadas de red sobre tu hardware. Nada sale de tu computadora.",
+    },
+  },
+  {
+    q: { en: "Will it slow down my computer?", es: "¿Hará lento mi equipo?" },
+    a: {
+      en: "No. It's a tiny Rust + Tauri app — a few megabytes and low memory. It only does work when you open it.",
+      es: "No. Es una app diminuta de Rust + Tauri — unos pocos megabytes y poca memoria. Solo trabaja cuando la abres.",
+    },
+  },
+  {
+    q: { en: "Can I build it myself?", es: "¿Puedo compilarlo yo mismo?" },
+    a: {
+      en: 'Absolutely. The full source is on GitHub with build instructions — Rust, Node 20+ and the WebKitGTK/GTK dev libraries on Linux.',
+      es: "Claro. Todo el código está en GitHub con instrucciones de compilación — Rust, Node 20+ y las librerías de desarrollo WebKitGTK/GTK en Linux.",
+    },
+  },
+];
+---
+<section id="faq" class="relative py-24 sm:py-32">
+  <div class="mx-auto max-w-3xl px-5 sm:px-8">
+    <div class="text-center mb-14">
+      <p class="reveal text-sm font-semibold uppercase tracking-widest text-yellow mb-3">
+        <T en="Questions?" es="¿Dudas?" />
+      </p>
+      <h2 class="reveal text-3xl sm:text-5xl font-extrabold tracking-tight" data-delay="1">
+        <T en="Frequently asked" es="Preguntas frecuentes" />
+      </h2>
+    </div>
+
+    <div class="space-y-3">
+      {faqs.map((f, i) => (
+        <details class="reveal group rounded-xl border border-surface0 bg-mantle/60 px-5 open:bg-mantle" data-delay={(i % 3) + 1}>
+          <summary class="flex items-center justify-between gap-4 cursor-pointer list-none py-4 font-semibold text-text">
+            <span><T en={f.q.en} es={f.q.es} /></span>
+            <svg class="w-5 h-5 shrink-0 text-overlay1 transition-transform duration-300 group-open:rotate-45" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          </summary>
+          <p class="pb-5 -mt-1 text-subtext leading-relaxed">
+            <T en={f.a.en} es={f.a.es} />
+          </p>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>

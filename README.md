@@ -80,13 +80,34 @@ pwsh ./deploy.ps1
 It builds with `PUBLIC_BASE=/dmgr-web/` (the Pages subpath) and no backend, then
 force-pushes `frontend/dist/` to `gh-pages`. GitHub Pages serves it within ~1 min.
 
-### Notes
+### Host the backend (for live download counters)
 
-- **Frontend:** any static host works. For Pages the subpath base is required; for a
-  root domain (Netlify / Vercel / Cloudflare Pages) leave `PUBLIC_BASE` unset.
-  Set `PUBLIC_API_BASE` to your deployed backend URL to enable live release data +
-  download counters (otherwise the bundled fallback links are used).
-- **Backend:** the Go service needs a host that runs a binary (Fly.io, Railway, a
-  small VPS, a container) — GitHub Pages can't run it. Mount a volume for
-  `counts.json` to persist counts. Once hosted, set `PUBLIC_API_BASE` and redeploy
-  the frontend.
+GitHub Pages can't run the Go service, so the public site uses the bundled fallback
+links and hides the counters until a backend is hosted. Config is included:
+
+**Fly.io:**
+```bash
+cd backend
+fly launch --copy-config --now      # pick a unique app name; creates the volume
+# → note the URL, e.g. https://dmgr-web-<you>.fly.dev
+```
+
+**Render.com:** push to GitHub, then *New → Blueprint* and select this repo
+(`render.yaml`). **Docker (anywhere):**
+```bash
+cd backend && docker build -t dmgr-web-backend . && docker run -p 8080:8080 -v dmgr_data:/data dmgr-web-backend
+```
+
+Then point the frontend at it and redeploy:
+```bash
+# set PUBLIC_API_BASE=https://your-backend-url  in frontend/.env  (and in deploy.ps1)
+pwsh ./deploy.ps1
+```
+
+### Custom domain
+
+1. Put your domain in `frontend/public/CNAME` (e.g. `dmgr.app`).
+2. Set `PUBLIC_BASE` to `/` (root) instead of `/dmgr-web/` when building, since a
+   custom domain serves from the root. Update `deploy.ps1` accordingly.
+3. Add the DNS records GitHub shows under *Settings → Pages → Custom domain*
+   (an `A`/`ALIAS` to GitHub Pages, or a `CNAME` to `khinmmad.github.io`).

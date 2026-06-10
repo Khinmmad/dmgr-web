@@ -1,0 +1,19 @@
+# Render.com blueprint for the Go backend.
+# Deploy: push to GitHub, then New > Blueprint and pick this repo.
+services:
+  - type: web
+    name: dmgr-web-backend
+    runtime: docker
+    rootDir: backend
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /healthz
+    envVars:
+      - key: PORT
+        value: "8080"
+      - key: DATA_DIR
+        value: /data
+    # Persistent disk keeps counts.json across deploys (paid plans).
+    disk:
+      name: data
+      mountPath: /data
+      sizeGB: 1
