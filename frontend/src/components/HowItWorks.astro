@@ -1,0 +1,59 @@
+---
+import T from "./T.astro";
+import { GITHUB_URL } from "../lib/releases";
+
+const points = [
+  {
+    color: "text-peach",
+    icon: `<path d="M13 2L4.5 12.5a1 1 0 00.8 1.6H11l-1 7.9 8.5-10.5a1 1 0 00-.8-1.6H12z"/>`,
+    en: { t: "Fast & native", d: "A Rust core with a Tauri shell — tiny binary, low memory, native device APIs. No Electron bloat." },
+    es: { t: "Rápido y nativo", d: "Un núcleo en Rust con cubierta Tauri — binario pequeño, poca memoria, APIs nativas. Sin el peso de Electron." },
+  },
+  {
+    color: "text-green",
+    icon: `<path d="M12 2l8 3v6c0 5-3.5 8.5-8 11-4.5-2.5-8-6-8-11V5z" fill="none"/><path d="M9 12l2 2 4-4"/>`,
+    en: { t: "Private by design", d: "Everything runs locally on your machine. No telemetry, no accounts, no data leaves your computer." },
+    es: { t: "Privado por diseño", d: "Todo corre localmente en tu equipo. Sin telemetría, sin cuentas, ningún dato sale de tu computadora." },
+  },
+  {
+    color: "text-mauve",
+    icon: `<path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/>`,
+    en: { t: "Open source", d: "MIT-licensed and built in the open. Read the code, file issues, send PRs — it's yours to shape." },
+    es: { t: "Código abierto", d: "Licencia MIT y desarrollado en abierto. Lee el código, reporta problemas, envía PRs — es tuyo para moldear." },
+  },
+];
+---
+<section class="relative py-24 sm:py-32 bg-mantle/40 border-y border-surface0/60">
+  <div class="mx-auto max-w-7xl px-5 sm:px-8">
+    <div class="grid lg:grid-cols-3 gap-6 mb-20">
+      {points.map((p, i) => (
+        <div class="reveal text-center px-4" data-delay={i + 1}>
+          <div class={`mx-auto grid place-items-center w-14 h-14 rounded-2xl bg-surface0/60 ring-1 ring-surface1/40 mb-5 ${p.color}`}>
+            <svg class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={p.icon} />
+          </div>
+          <h3 class="text-xl font-bold mb-2"><T en={p.en.t} es={p.es.t} /></h3>
+          <p class="text-subtext leading-relaxed max-w-sm mx-auto"><T en={p.en.d} es={p.es.d} /></p>
+        </div>
+      ))}
+    </div>
+
+    <div class="reveal relative overflow-hidden rounded-3xl border border-surface0 bg-gradient-to-br from-base to-mantle p-10 sm:p-14 text-center">
+      <div class="pointer-events-none absolute -top-20 -right-20 w-72 h-72 rounded-full bg-mauve/20 blur-[100px]"></div>
+      <div class="pointer-events-none absolute -bottom-20 -left-20 w-72 h-72 rounded-full bg-blue/20 blur-[100px]"></div>
+      <h2 class="relative text-3xl sm:text-4xl font-extrabold tracking-tight">
+        <T en="Take control of your hardware" es="Toma el control de tu hardware" />
+      </h2>
+      <p class="relative mt-3 text-subtext text-lg max-w-xl mx-auto">
+        <T en="Install dmgr in seconds. It's free, forever." es="Instala dmgr en segundos. Es gratis, para siempre." />
+      </p>
+      <div class="relative mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="#downloads" class="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-mauve to-blue px-7 py-3.5 font-bold text-base shadow-xl shadow-blue/30 hover:-translate-y-0.5 transition">
+          <T en="Download now" es="Descargar ahora" />
+        </a>
+        <a href={GITHUB_URL} target="_blank" rel="noopener" class="inline-flex items-center justify-center gap-2 rounded-xl border border-surface1 px-7 py-3.5 font-semibold hover:bg-surface0 transition">
+          <T en="Explore the code" es="Explora el código" />
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

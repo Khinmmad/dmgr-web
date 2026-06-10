@@ -1,0 +1,34 @@
+---
+import T from "./T.astro";
+import { GITHUB_URL, RELEASES_PAGE, AUR_URL } from "../lib/releases";
+---
+<footer class="border-t border-surface0 bg-mantle">
+  <div class="mx-auto max-w-7xl px-5 sm:px-8 py-12">
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-6">
+      <div class="flex items-center gap-2.5">
+        <span class="grid place-items-center w-8 h-8 rounded-lg bg-gradient-to-br from-mauve to-blue text-base">⚙</span>
+        <div>
+          <div class="font-extrabold">dmgr</div>
+          <div class="text-xs text-overlay0">
+            <T en="Device manager for Linux, Windows &amp; macOS" es="Administrador de dispositivos para Linux, Windows y macOS" />
+          </div>
+        </div>
+      </div>
+
+      <nav class="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-subtext">
+        <a href="#features" class="hover:text-text transition"><T en="Features" es="Características" /></a>
+        <a href="#downloads" class="hover:text-text transition"><T en="Download" es="Descargas" /></a>
+        <a href={RELEASES_PAGE} target="_blank" rel="noopener" class="hover:text-text transition"><T en="Releases" es="Versiones" /></a>
+        <a href={AUR_URL} target="_blank" rel="noopener" class="hover:text-text transition">AUR</a>
+        <a href={GITHUB_URL} target="_blank" rel="noopener" class="hover:text-text transition">GitHub</a>
+      </nav>
+    </div>
+
+    <div class="mt-8 pt-6 border-t border-surface0/60 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-overlay0">
+      <p><T en="Released under the MIT License." es="Publicado bajo la Licencia MIT." /></p>
+      <p class="flex items-center gap-1.5">
+        <T en="Built with" es="Hecho con" /> <span class="text-red">♥</span> <T en="for the open-source community" es="para la comunidad de código abierto" />
+      </p>
+    </div>
+  </div>
+</footer>

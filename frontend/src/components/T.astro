@@ -1,0 +1,11 @@
+---
+// Bilingual text. Renders both languages; CSS (in global.css) hides the inactive
+// one based on <html data-lang>. Use `set:html` so inline markup is allowed.
+interface Props {
+  en: string;
+  es: string;
+  class?: string;
+}
+const { en, es, class: cls } = Astro.props;
+---
+<span class={cls}><span data-when-lang="en" set:html={en} /><span data-when-lang="es" set:html={es} /></span>

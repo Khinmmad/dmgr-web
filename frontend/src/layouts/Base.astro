@@ -1,0 +1,199 @@
+---
+import "../styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+const {
+  title = "dmgr — A modern Device Manager for Linux, Windows & macOS",
+  description = "Browse and manage your hardware — devices, drivers, audio, Bluetooth and kernel modules — from a clean, fast desktop app. Free & open source.",
+} = Astro.props;
+
+const base = import.meta.env.BASE_URL; // "/" or "/dmgr-web/"
+const ogImage = new URL(`${base}screenshots/devices.png`, Astro.site).href;
+---
+
+<!doctype html>
+<html lang="en" data-lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content={ogImage} />
+    <meta name="theme-color" content="#1e1e2e" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Set language before paint to avoid a flash of the wrong language. -->
+    <script is:inline>
+      (function () {
+        try {
+          var saved = localStorage.getItem("dmgr-lang");
+          var detected = (navigator.language || "en").toLowerCase().indexOf("es") === 0 ? "es" : "en";
+          var lang = saved || detected;
+          document.documentElement.setAttribute("data-lang", lang);
+          document.documentElement.setAttribute("lang", lang);
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body class="bg-base text-text">
+    <slot />
+
+    <script>
+      import { FALLBACK, RELEASES_PAGE, type Platform } from "../lib/releases";
+
+      const API = (import.meta.env.PUBLIC_API_BASE ?? "").replace(/\/$/, "");
+
+      // ── Language toggle ──────────────────────────────────────────────────
+      function setLang(lang: string) {
+        document.documentElement.setAttribute("data-lang", lang);
+        document.documentElement.setAttribute("lang", lang);
+        try {
+          localStorage.setItem("dmgr-lang", lang);
+        } catch (e) {}
+        document.querySelectorAll<HTMLElement>("[data-lang-set]").forEach((b) => {
+          b.classList.toggle("is-active", b.dataset.langSet === lang);
+        });
+      }
+      document.querySelectorAll<HTMLElement>("[data-lang-set]").forEach((btn) => {
+        btn.addEventListener("click", () => setLang(btn.dataset.langSet!));
+      });
+      setLang(document.documentElement.getAttribute("data-lang") || "en");
+
+      // ── Scroll reveal ────────────────────────────────────────────────────
+      const io = new IntersectionObserver(
+        (entries) => {
+          for (const e of entries) {
+            if (e.isIntersecting) {
+              e.target.classList.add("in-view");
+              io.unobserve(e.target);
+            }
+          }
+        },
+        { threshold: 0.12, rootMargin: "0px 0px -40px 0px" }
+      );
+      document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+
+      // ── Nav background on scroll ─────────────────────────────────────────
+      const nav = document.getElementById("nav");
+      if (nav) {
+        const onScroll = () => nav.classList.toggle("scrolled", window.scrollY > 24);
+        onScroll();
+        window.addEventListener("scroll", onScroll, { passive: true });
+      }
+
+      // ── Detect OS for the hero primary download ──────────────────────────
+      function detectPlatform(): Platform {
+        const ua = navigator.userAgent.toLowerCase();
+        const p = (navigator.platform || "").toLowerCase();
+        if (ua.includes("win") || p.includes("win")) return "windows";
+        if (ua.includes("mac") || p.includes("mac")) return "macos";
+        if (ua.includes("android")) return "debian";
+        return "debian"; // generic Linux
+      }
+
+      // ── Downloads: start from fallback, upgrade with live backend data ───
+      type Info = { available: boolean; url?: string; filename?: string; command?: string };
+      let data: Record<string, Info> = { ...FALLBACK } as any;
+
+      function applyData() {
+        document.querySelectorAll<HTMLElement>("[data-platform]").forEach((card) => {
+          const plat = card.dataset.platform as string;
+          const info = data[plat];
+          const btn = card.querySelector<HTMLAnchorElement>("[data-dl-btn]");
+          const soon = card.querySelector<HTMLElement>("[data-soon]");
+          if (!info || !info.available) {
+            card.classList.add("opacity-60");
+            if (soon) soon.classList.remove("hidden");
+            if (btn) {
+              btn.removeAttribute("href");
+              btn.classList.add("pointer-events-none", "opacity-50");
+            }
+            return;
+          }
+          card.classList.remove("opacity-60");
+          if (soon) soon.classList.add("hidden");
+          if (btn) {
+            btn.classList.remove("pointer-events-none", "opacity-50");
+            // Prefer the counting redirect endpoint when the backend is up.
+            btn.href = API ? `${API}/api/download/${plat}` : info.url || RELEASES_PAGE;
+            if (API) btn.setAttribute("target", "_self");
+          }
+        });
+      }
+
+      function applyStats(stats: Record<string, number>) {
+        let total = 0;
+        for (const k in stats) total += stats[k] || 0;
+        document.querySelectorAll<HTMLElement>("[data-count]").forEach((el) => {
+          const plat = el.dataset.count as string;
+          const n = stats[plat] || 0;
+          el.textContent = n.toLocaleString();
+          el.closest<HTMLElement>("[data-count-wrap]")?.classList.toggle("hidden", n <= 0);
+        });
+        const totalEl = document.getElementById("dl-total");
+        if (totalEl && total > 0) {
+          totalEl.textContent = total.toLocaleString();
+          document.getElementById("dl-total-wrap")?.classList.remove("hidden");
+        }
+      }
+
+      applyData();
+
+      if (API) {
+        fetch(`${API}/api/releases`)
+          .then((r) => (r.ok ? r.json() : Promise.reject()))
+          .then((j) => {
+            if (j && j.platforms) {
+              data = j.platforms;
+              applyData();
+            }
+            if (j && j.version) {
+              document
+                .querySelectorAll<HTMLElement>("[data-version]")
+                .forEach((el) => (el.textContent = j.version));
+            }
+          })
+          .catch(() => {});
+        fetch(`${API}/api/stats`)
+          .then((r) => (r.ok ? r.json() : Promise.reject()))
+          .then((j) => applyStats(j || {}))
+          .catch(() => {});
+      }
+
+      // Hero primary button → user's OS.
+      const heroBtn = document.getElementById("hero-download") as HTMLAnchorElement | null;
+      const heroLabel = document.getElementById("hero-os-label");
+      if (heroBtn) {
+        const plat = detectPlatform();
+        const info = data[plat];
+        const names: Record<string, string> = {
+          windows: "Windows",
+          macos: "macOS",
+          debian: "Linux",
+          fedora: "Fedora",
+          arch: "Arch",
+          appimage: "Linux",
+        };
+        if (heroLabel) heroLabel.textContent = names[plat] || "Linux";
+        heroBtn.href = info && info.available
+          ? API
+            ? `${API}/api/download/${plat}`
+            : info.url || "#downloads"
+          : "#downloads";
+      }
+    </script>
+  </body>
+</html>

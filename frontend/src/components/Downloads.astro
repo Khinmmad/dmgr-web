@@ -1,0 +1,163 @@
+---
+import T from "./T.astro";
+import { FALLBACK, RELEASES_PAGE, GITHUB_URL } from "../lib/releases";
+
+type Card = {
+  id: keyof typeof FALLBACK;
+  name: string;
+  fmt: { en: string; es: string };
+  note: { en: string; es: string };
+  color: string;
+  icon: string;
+  cta: { en: string; es: string };
+};
+
+const cards: Card[] = [
+  {
+    id: "windows",
+    name: "Windows",
+    fmt: { en: ".msi installer", es: "instalador .msi" },
+    note: { en: "Windows 10 / 11, 64-bit.", es: "Windows 10 / 11, 64 bits." },
+    color: "sapphire",
+    icon: `<path d="M3 5.5l8-1.1V11H3zM13 4.1L21 3v8h-8zM3 13h8v6.6l-8-1.1zM13 13h8v8l-8-1.1z"/>`,
+    cta: { en: "Download .msi", es: "Descargar .msi" },
+  },
+  {
+    id: "macos",
+    name: "macOS",
+    fmt: { en: ".dmg disk image", es: "imagen .dmg" },
+    note: { en: "Apple Silicon & Intel.", es: "Apple Silicon e Intel." },
+    color: "text",
+    icon: `<path d="M16 3c0 1.7-1.4 3.2-3 3 0-1.7 1.4-3.2 3-3zM19 17c-.5 1.2-1.2 2.4-2.2 3.4-.7.7-1.4 1.4-2.5 1.4s-1.4-.6-2.6-.6-1.6.6-2.6.6-1.8-.7-2.5-1.5C2.6 18 1.7 13.4 3.6 10.7c.9-1.3 2.4-2.1 4-2.1 1.1 0 1.9.7 2.9.7s1.6-.7 3-.7c1.2 0 2.5.7 3.4 1.8-3 1.7-2.5 5.9 1.1 6.9z"/>`,
+    cta: { en: "Download .dmg", es: "Descargar .dmg" },
+  },
+  {
+    id: "arch",
+    name: "Arch Linux",
+    fmt: { en: "AUR package", es: "paquete AUR" },
+    note: { en: "Install with your AUR helper.", es: "Instala con tu ayudante de AUR." },
+    color: "blue",
+    icon: `<path d="M12 3l9 17H3z" fill="none"/><path d="M12 3l9 17H3L12 3zm0 5l-4 8h8z"/>`,
+    cta: { en: "View on AUR", es: "Ver en AUR" },
+  },
+  {
+    id: "debian",
+    name: "Debian / Ubuntu",
+    fmt: { en: ".deb package", es: "paquete .deb" },
+    note: { en: "Includes the polkit helper.", es: "Incluye el helper de polkit." },
+    color: "red",
+    icon: `<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4" fill="none"/>`,
+    cta: { en: "Download .deb", es: "Descargar .deb" },
+  },
+  {
+    id: "fedora",
+    name: "Fedora / openSUSE",
+    fmt: { en: ".rpm package", es: "paquete .rpm" },
+    note: { en: "dnf / zypper compatible.", es: "Compatible con dnf / zypper." },
+    color: "blue",
+    icon: `<circle cx="12" cy="12" r="9"/><path d="M12 16V9a2.5 2.5 0 112.5 2.5H9" fill="none"/>`,
+    cta: { en: "Download .rpm", es: "Descargar .rpm" },
+  },
+  {
+    id: "appimage",
+    name: "AppImage",
+    fmt: { en: "Portable, any distro", es: "Portátil, cualquier distro" },
+    note: { en: "chmod +x and run. No install.", es: "chmod +x y ejecuta. Sin instalar." },
+    color: "yellow",
+    icon: `<path d="M12 2l9 5v10l-9 5-9-5V7z" fill="none"/><path d="M12 22V12M21 7l-9 5-9-5"/>`,
+    cta: { en: "Download AppImage", es: "Descargar AppImage" },
+  },
+];
+
+const tile: Record<string, string> = {
+  sapphire: "text-sapphire bg-sapphire/10 ring-sapphire/20",
+  text: "text-text bg-surface1/30 ring-surface1/40",
+  blue: "text-blue bg-blue/10 ring-blue/20",
+  red: "text-red bg-red/10 ring-red/20",
+  yellow: "text-yellow bg-yellow/10 ring-yellow/20",
+};
+---
+<section id="downloads" class="relative py-24 sm:py-32">
+  <div class="pointer-events-none absolute inset-0 -z-10" aria-hidden="true">
+    <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-[40rem] h-[40rem] rounded-full bg-blue/10 blur-[140px]"></div>
+  </div>
+
+  <div class="mx-auto max-w-7xl px-5 sm:px-8">
+    <div class="max-w-2xl mx-auto text-center mb-14">
+      <p class="reveal text-sm font-semibold uppercase tracking-widest text-teal mb-3">
+        <T en="Get started" es="Empieza ya" />
+      </p>
+      <h2 class="reveal text-3xl sm:text-5xl font-extrabold tracking-tight" data-delay="1">
+        <T en="Download dmgr" es="Descarga dmgr" />
+      </h2>
+      <p class="reveal mt-4 text-subtext text-lg" data-delay="2">
+        <T en="Free, open source, no account needed. Pick your platform." es="Gratis, código abierto, sin cuenta. Elige tu plataforma." />
+        <span id="dl-total-wrap" class="hidden"> · <span id="dl-total" class="text-text font-semibold">0</span> <T en="downloads" es="descargas" /></span>
+      </p>
+    </div>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      {cards.map((c, i) => {
+        const info = FALLBACK[c.id];
+        return (
+          <div
+            data-platform={c.id}
+            class={`reveal glow-card rounded-2xl border border-surface0 bg-mantle/60 p-6 flex flex-col ${info.available ? "" : "opacity-60"}`}
+            data-delay={(i % 3) + 1}
+          >
+            <div class="flex items-center gap-3.5 mb-4">
+              <div class={`grid place-items-center w-12 h-12 rounded-xl ring-1 ${tile[c.color]}`}>
+                <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" set:html={c.icon} />
+              </div>
+              <div class="min-w-0">
+                <div class="font-bold leading-tight">{c.name}</div>
+                <div class="text-xs text-subtext"><T en={c.fmt.en} es={c.fmt.es} /></div>
+              </div>
+              <span data-soon class={`ml-auto shrink-0 rounded-full bg-surface0 text-overlay1 text-[11px] font-semibold px-2.5 py-1 ${info.available ? "hidden" : ""}`}>
+                <T en="Coming soon" es="Próximamente" />
+              </span>
+            </div>
+
+            <p class="text-sm text-subtext leading-relaxed"><T en={c.note.en} es={c.note.es} /></p>
+
+            {c.id === "arch" && (
+              <code class="mt-4 block rounded-lg bg-crust border border-surface0 px-3 py-2 text-xs text-teal font-mono select-all">
+                paru -S dmgr-desktop
+              </code>
+            )}
+
+            <div class="mt-auto pt-5">
+              <a
+                data-dl-btn
+                href={info.available ? info.url : undefined}
+                target="_blank"
+                rel="noopener"
+                class={`inline-flex w-full items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold transition ${
+                  info.available
+                    ? "bg-gradient-to-r from-mauve to-blue text-base hover:brightness-110"
+                    : "bg-surface0 text-overlay1 pointer-events-none opacity-50"
+                }`}
+              >
+                <T en={c.cta.en} es={c.cta.es} />
+              </a>
+              <div data-count-wrap class="hidden mt-2 text-center text-xs text-overlay0">
+                <span data-count={c.id}>0</span> <T en="downloads" es="descargas" />
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+
+    <p class="reveal mt-10 text-center text-sm text-subtext">
+      <T en="Looking for everything?" es="¿Buscas todo?" />
+      <a href={RELEASES_PAGE} target="_blank" rel="noopener" class="text-blue hover:underline ml-1">
+        <T en="All releases on GitHub" es="Todas las versiones en GitHub" />
+      </a>
+      ·
+      <a href={`${GITHUB_URL}#build-from-source`} target="_blank" rel="noopener" class="text-blue hover:underline ml-1">
+        <T en="Build from source" es="Compilar desde el código" />
+      </a>
+    </p>
+  </div>
+</section>

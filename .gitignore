@@ -1,0 +1,23 @@
+# frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.astro/
+frontend/preview.log
+frontend/.env*
+!frontend/.env.example
+
+# backend
+backend/dmgr-web-backend
+backend/dmgr-web-backend.exe
+backend/counts.json
+backend/server.log
+backend/server.err
+
+# build/screenshot artifacts
+*.log
+landing-*.png
+crop-*.png
+
+# os
+.DS_Store
+Thumbs.db

@@ -1,0 +1,79 @@
+---
+import T from "./T.astro";
+
+const shots = [
+  {
+    img: "screenshots/audio.png",
+    tag: { en: "Audio", es: "Audio" },
+    color: "text-green",
+    title: { en: "Switch outputs in a click", es: "Cambia de salida en un clic" },
+    body: {
+      en: "Every speaker, headset and HDMI sink in one list. The active one glows green — switch, set volume or mute instantly.",
+      es: "Cada altavoz, auricular y salida HDMI en una lista. La activa brilla en verde — cambia, ajusta volumen o silencia al instante.",
+    },
+  },
+  {
+    img: "screenshots/settings.png",
+    tag: { en: "Customization", es: "Personalización" },
+    color: "text-mauve",
+    title: { en: "Make it yours", es: "Hazlo tuyo" },
+    body: {
+      en: "Light or dark, six accent colors (or your own), comfortable or compact density — and it remembers your last view across sessions.",
+      es: "Claro u oscuro, seis colores de acento (o el tuyo), densidad cómoda o compacta — y recuerda tu última vista entre sesiones.",
+    },
+  },
+  {
+    img: "screenshots/bluetooth.png",
+    tag: { en: "Bluetooth", es: "Bluetooth" },
+    color: "text-sapphire",
+    title: { en: "Bluetooth at a glance", es: "Bluetooth de un vistazo" },
+    body: {
+      en: "Paired devices with live connection status and the adapter toggle right in the header. Connected devices are highlighted.",
+      es: "Dispositivos emparejados con estado de conexión en vivo y el interruptor del adaptador en el encabezado. Los conectados se resaltan.",
+    },
+  },
+];
+---
+<section id="showcase" class="relative py-24 sm:py-32 bg-mantle/40 border-y border-surface0/60">
+  <div class="mx-auto max-w-7xl px-5 sm:px-8">
+    <div class="max-w-2xl mx-auto text-center mb-20">
+      <p class="reveal text-sm font-semibold uppercase tracking-widest text-mauve mb-3">
+        <T en="A closer look" es="De cerca" />
+      </p>
+      <h2 class="reveal text-3xl sm:text-5xl font-extrabold tracking-tight" data-delay="1">
+        <T en="Designed to feel effortless" es="Diseñado para sentirse natural" />
+      </h2>
+    </div>
+
+    <div class="space-y-24">
+      {shots.map((s, i) => (
+        <div class={`grid lg:grid-cols-2 gap-10 lg:gap-16 items-center ${i % 2 === 1 ? "lg:[direction:rtl]" : ""}`}>
+          <div class="reveal [direction:ltr]">
+            <span class={`text-sm font-semibold uppercase tracking-widest ${s.color}`}>
+              <T en={s.tag.en} es={s.tag.es} />
+            </span>
+            <h3 class="mt-3 text-2xl sm:text-3xl font-bold">
+              <T en={s.title.en} es={s.title.es} />
+            </h3>
+            <p class="mt-4 text-subtext text-lg leading-relaxed">
+              <T en={s.body.en} es={s.body.es} />
+            </p>
+          </div>
+          <div class="reveal [direction:ltr]" data-delay="1">
+            <div class="relative group">
+              <div class="absolute -inset-3 bg-gradient-to-tr from-mauve/20 to-blue/20 blur-2xl rounded-2xl opacity-70 group-hover:opacity-100 transition"></div>
+              <img
+                src={`${import.meta.env.BASE_URL}${s.img}`}
+                alt={s.title.en}
+                width="1196"
+                height="799"
+                loading="lazy"
+                class="relative w-full rounded-xl border border-surface0 shadow-2xl"
+              />
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
