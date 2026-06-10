@@ -32,6 +32,7 @@ jobs:
         env:
           PUBLIC_BASE: /dmgr-web/
           PUBLIC_SITE: https://khinmmad.github.io
+          PUBLIC_API_BASE: https://dmgr-web-backend.onrender.com
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
