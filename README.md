@@ -71,14 +71,10 @@ from anywhere.
 ## Deploy
 
 The frontend is live on **GitHub Pages** at https://khinmmad.github.io/dmgr-web/
-(served from the `gh-pages` branch). To rebuild and publish:
-
-```powershell
-pwsh ./deploy.ps1
-```
-
-It builds with `PUBLIC_BASE=/dmgr-web/` (the Pages subpath) and no backend, then
-force-pushes `frontend/dist/` to `gh-pages`. GitHub Pages serves it within ~1 min.
+and deploys **automatically** on every push to `main` via GitHub Actions
+(`.github/workflows/deploy.yml`). The workflow builds with `PUBLIC_BASE=/dmgr-web/`
+and publishes to Pages — no manual step needed. You can also trigger it from the
+**Actions** tab (*Run workflow*).
 
 ### Host the backend (for live download counters)
 
