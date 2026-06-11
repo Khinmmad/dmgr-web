@@ -150,6 +150,7 @@ const jsonLd = {
 
       // ── GitHub stars (cached per session) ────────────────────────────────
       function showStars(n: number) {
+        if (n <= 0) return; // an empty badge sells better than "★ 0"
         const txt = n >= 1000 ? (n / 1000).toFixed(1) + "k" : String(n);
         document.querySelectorAll<HTMLElement>("[data-stars]").forEach((el) => {
           el.textContent = txt;
