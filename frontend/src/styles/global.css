@@ -138,6 +138,115 @@ html[data-lang="es"] [data-when-lang="en"] {
   color: var(--color-text);
 }
 
+/* ── Hero screenshot tabs ──────────────────────────────────────────────────── */
+.shot-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--color-surface0);
+  background: color-mix(in srgb, var(--color-mantle) 60%, transparent);
+  color: var(--color-subtext);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+}
+.shot-tab:hover {
+  color: var(--color-text);
+  border-color: var(--color-surface1);
+  transform: translateY(-1px);
+}
+.shot-tab.active {
+  background-image: linear-gradient(to right, var(--color-mauve), var(--color-blue));
+  color: var(--color-base);
+  border-color: transparent;
+}
+.shot-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+  opacity: 0;
+  transition: opacity 0.45s ease;
+}
+.shot-img.active {
+  opacity: 1;
+}
+
+/* ── Scroll progress + back-to-top ─────────────────────────────────────────── */
+#scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 0%;
+  z-index: 60;
+  background-image: linear-gradient(to right, var(--color-mauve), var(--color-blue), var(--color-teal));
+}
+#to-top {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 50;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--color-surface0);
+  color: var(--color-text);
+  border: 1px solid var(--color-surface1);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(10px);
+  transition: opacity 0.25s ease, transform 0.25s ease, background 0.2s ease;
+  cursor: pointer;
+}
+#to-top.show {
+  opacity: 1;
+  pointer-events: auto;
+  transform: none;
+}
+#to-top:hover {
+  background: var(--color-surface1);
+}
+
+/* ── Copy button ───────────────────────────────────────────────────────────── */
+.copy-btn {
+  flex: none;
+  color: var(--color-overlay1);
+  font-size: 14px;
+  line-height: 1;
+  padding: 4px 6px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+.copy-btn:hover {
+  color: var(--color-text);
+  background: var(--color-surface0);
+}
+.copy-btn.copied {
+  color: var(--color-green);
+}
+
+/* ── Mobile menu ───────────────────────────────────────────────────────────── */
+#mobile-menu {
+  background: color-mix(in srgb, var(--color-mantle) 96%, transparent);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--color-surface0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shot-img { transition: none; }
+  #to-top { transition: none; }
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar { width: 12px; }
 ::-webkit-scrollbar-track { background: var(--color-mantle); }

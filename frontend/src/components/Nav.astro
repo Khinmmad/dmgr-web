@@ -14,7 +14,12 @@ import { GITHUB_URL } from "../lib/releases";
       <a href="#showcase" class="hover:text-text transition-colors"><T en="Screenshots" es="Capturas" /></a>
       <a href="#downloads" class="hover:text-text transition-colors"><T en="Download" es="Descargas" /></a>
       <a href="#faq" class="hover:text-text transition-colors">FAQ</a>
-      <a href={GITHUB_URL} target="_blank" rel="noopener" class="hover:text-text transition-colors">GitHub</a>
+      <a href={GITHUB_URL} target="_blank" rel="noopener" class="flex items-center gap-1.5 hover:text-text transition-colors">
+        GitHub
+        <span data-stars-wrap class="hidden items-center gap-1 rounded-full bg-surface0/70 px-2 py-0.5 text-[11px] font-semibold text-yellow [&:not(.hidden)]:inline-flex">
+          ★ <span data-stars></span>
+        </span>
+      </a>
     </div>
 
     <div class="flex items-center gap-3">
@@ -28,6 +33,20 @@ import { GITHUB_URL } from "../lib/releases";
       >
         <T en="Get dmgr" es="Descargar" />
       </a>
+      <button id="menu-btn" class="md:hidden grid place-items-center w-9 h-9 rounded-lg bg-mantle/70 border border-surface0 text-text" aria-label="Menu">
+        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
     </div>
   </nav>
+
+  <!-- mobile menu -->
+  <div id="mobile-menu" class="hidden md:hidden px-5 py-4">
+    <div class="flex flex-col gap-1 text-sm">
+      <a href="#features" class="py-2.5 px-3 rounded-lg text-subtext hover:text-text hover:bg-surface0/60 transition"><T en="Features" es="Características" /></a>
+      <a href="#showcase" class="py-2.5 px-3 rounded-lg text-subtext hover:text-text hover:bg-surface0/60 transition"><T en="Screenshots" es="Capturas" /></a>
+      <a href="#downloads" class="py-2.5 px-3 rounded-lg text-subtext hover:text-text hover:bg-surface0/60 transition"><T en="Download" es="Descargas" /></a>
+      <a href="#faq" class="py-2.5 px-3 rounded-lg text-subtext hover:text-text hover:bg-surface0/60 transition">FAQ</a>
+      <a href={GITHUB_URL} target="_blank" rel="noopener" class="py-2.5 px-3 rounded-lg text-subtext hover:text-text hover:bg-surface0/60 transition">GitHub</a>
+    </div>
+  </div>
 </header>

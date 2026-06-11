@@ -1,6 +1,15 @@
 ---
 import T from "./T.astro";
 import { GITHUB_URL } from "../lib/releases";
+
+const base = import.meta.env.BASE_URL;
+const shots = [
+  { img: "screenshots/devices.png", icon: "🖥", en: "Devices", es: "Dispositivos" },
+  { img: "screenshots/audio.png", icon: "🔊", en: "Audio", es: "Audio" },
+  { img: "screenshots/bluetooth.png", icon: "🔵", en: "Bluetooth", es: "Bluetooth" },
+  { img: "screenshots/settings.png", icon: "⚙", en: "Settings", es: "Ajustes" },
+  { img: "screenshots/light.png", icon: "☀", en: "Light theme", es: "Tema claro" },
+];
 ---
 <section id="top" class="relative overflow-hidden pt-32 pb-20 sm:pt-40 sm:pb-28">
   <!-- animated gradient blobs -->
@@ -55,25 +64,42 @@ import { GITHUB_URL } from "../lib/releases";
     </p>
   </div>
 
-  <!-- hero screenshot -->
-  <div class="reveal mt-16 px-5 sm:px-8" data-delay="2">
-    <div class="relative mx-auto max-w-5xl">
-      <div class="absolute -inset-4 bg-gradient-to-r from-mauve/30 via-blue/30 to-teal/30 blur-2xl rounded-3xl animate-glow"></div>
-      <div class="relative rounded-2xl border border-surface0 bg-mantle shadow-2xl overflow-hidden">
-        <div class="flex items-center gap-1.5 px-4 h-9 bg-crust border-b border-surface0">
-          <span class="w-3 h-3 rounded-full bg-red/80"></span>
-          <span class="w-3 h-3 rounded-full bg-yellow/80"></span>
-          <span class="w-3 h-3 rounded-full bg-green/80"></span>
-          <span class="ml-3 text-xs text-overlay0">dmgr — Device Manager</span>
+  <!-- hero screenshot: interactive tabbed viewer -->
+  <div class="reveal mt-14 px-5 sm:px-8" data-delay="2">
+    <div class="mx-auto max-w-5xl">
+      <div class="flex flex-wrap justify-center gap-2 mb-6">
+        {shots.map((s, i) => (
+          <button data-shot-tab class={`shot-tab ${i === 0 ? "active" : ""}`} type="button">
+            <span>{s.icon}</span>
+            <T en={s.en} es={s.es} />
+          </button>
+        ))}
+      </div>
+
+      <div class="relative">
+        <div class="absolute -inset-4 bg-gradient-to-r from-mauve/30 via-blue/30 to-teal/30 blur-2xl rounded-3xl animate-glow"></div>
+        <div class="relative rounded-2xl border border-surface0 bg-mantle shadow-2xl overflow-hidden">
+          <div class="flex items-center gap-1.5 px-4 h-9 bg-crust border-b border-surface0">
+            <span class="w-3 h-3 rounded-full bg-red/80"></span>
+            <span class="w-3 h-3 rounded-full bg-yellow/80"></span>
+            <span class="w-3 h-3 rounded-full bg-green/80"></span>
+            <span class="ml-3 text-xs text-overlay0">dmgr — Device Manager</span>
+          </div>
+          <div class="relative w-full" style="aspect-ratio: 1196 / 799;">
+            {shots.map((s, i) => (
+              <img
+                data-shot-img
+                src={`${base}${s.img}`}
+                alt={`dmgr — ${s.en}`}
+                width="1196"
+                height="799"
+                loading={i === 0 ? "eager" : "lazy"}
+                decoding="async"
+                class={`shot-img ${i === 0 ? "active" : ""}`}
+              />
+            ))}
+          </div>
         </div>
-        <img
-          src={`${import.meta.env.BASE_URL}screenshots/devices.png`}
-          alt="dmgr device list"
-          width="1196"
-          height="799"
-          loading="eager"
-          class="w-full block"
-        />
       </div>
     </div>
   </div>

@@ -121,9 +121,10 @@ const tile: Record<string, string> = {
             <p class="text-sm text-subtext leading-relaxed"><T en={c.note.en} es={c.note.es} /></p>
 
             {c.id === "arch" && (
-              <code class="mt-4 block rounded-lg bg-crust border border-surface0 px-3 py-2 text-xs text-teal font-mono select-all">
-                paru -S dmgr-desktop
-              </code>
+              <div class="mt-4 flex items-center gap-2 rounded-lg bg-crust border border-surface0 px-3 py-2">
+                <code class="flex-1 text-xs text-teal font-mono select-all">paru -S dmgr-desktop</code>
+                <button data-copy="paru -S dmgr-desktop" class="copy-btn" type="button" aria-label="Copy command" title="Copy">⧉</button>
+              </div>
             )}
 
             <div class="mt-auto pt-5">
