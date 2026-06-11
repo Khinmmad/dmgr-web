@@ -21,7 +21,11 @@ export const FALLBACK_VERSION = "v2.1.0";
 const base = `${GITHUB_URL}/releases/download/${FALLBACK_VERSION}`;
 
 export const FALLBACK: Record<Platform, PlatformInfo> = {
-  windows: { available: false },
+  windows: {
+    available: true,
+    url: `${base}/dmgr-desktop_2.1.0_x64-setup.exe`,
+    filename: "dmgr-desktop_2.1.0_x64-setup.exe",
+  },
   macos: { available: false },
   arch: { available: true, url: AUR_URL, command: "paru -S dmgr-desktop" },
   debian: {
